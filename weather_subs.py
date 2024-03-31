@@ -13,13 +13,13 @@ def main():
     except FileNotFoundError as e:
         print("Нет файла, нет подписчиков!")
         exit()
-        
+
     tg_bot = bot.bot
     message = functions.get_weather('novosibirsk')
-
+    
     for i in range(len(users)):
-        tg_bot.send_message(i, message)
-        sleep(5)
+        tg_bot.send_message(users[i], message)
+        sleep(2)
         
 
 if __name__ == '__main__':
