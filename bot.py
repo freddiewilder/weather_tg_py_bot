@@ -8,7 +8,7 @@ def send_weather(dump_path=SUBSCRIBERS):
 
     try:
         users = lib.get_users()
-        weather = lib.get_weather()
+        weather = lib.get_weather("Новосибирск")
 
         for n in users:
             print(n, weather)
