@@ -3,10 +3,13 @@ from dotenv import load_dotenv
 from os import getenv
 from datetime import time, datetime
 from time import sleep
+import telebot
 
 load_dotenv()
 API_KEY = getenv('API_KEY')
+BOT_TOKEN = getenv('TG_API_KEY')
 SUBSCRIBERS = 'subscribers.txt'
+BOT = telebot.TeleBot(BOT_TOKEN)
 
 def get_users(dump_path=SUBSCRIBERS):
     with open(file=dump_path, mode="r") as file:
@@ -27,7 +30,7 @@ def save_id(user_id, dump_path=SUBSCRIBERS):
 
         try:
             if user[user.index(uid_str)] == uid_str:
-                print('Got ya!')
+                print('Ошибка повторной подписки!')
                 return False
 
         except ValueError as e:
@@ -39,7 +42,7 @@ def save_id(user_id, dump_path=SUBSCRIBERS):
             user = [n.strip() for n in user]
 
             if user[user.index(uid_str)] == uid_str:
-                print('New value Exception: Added!')
+                print('Новый подписчик!')
                 return True
 
             else:
@@ -49,7 +52,7 @@ def save_id(user_id, dump_path=SUBSCRIBERS):
     except FileNotFoundError:
         with open (dump_path, 'w') as file:
             file.write(uid_str + '\n')
-        print("FNF: Added!")
+        print("Был создан файл и запись добавлена!")
         return True
 
 def del_id(target_id = None, dump_path = SUBSCRIBERS):
@@ -57,25 +60,26 @@ def del_id(target_id = None, dump_path = SUBSCRIBERS):
     try:
         users.pop(users.index(str(target_id)))
         if len(users) == 0:
-            print("Flag 1")
+            print("Последний подписчик отписался!")
             with open(SUBSCRIBERS, "w") as file:
                 file.write("")
             return True
         else:
-            print('Flag 2')
             if len(users) > 0:
-                print ("Flag 2.1")
+                print ("Один из подписчиков отписывается!")
                 with open(SUBSCRIBERS, "w") as file:
                     for i in range(len(users)):
                         file.write(users[i] + "\n")
+                        return True
             else:
-                print ("Flag 2.2")
+                print ("Ошибка в функции удаления подписчиков, файл опустошен!")
                 with open(SUBSCRIBERS, 'w') as file:
                     file.write("")
-            return True
+                return False
+    
     except ValueError as e:
-        print (e)
-        print("Del_id error")
+        #print (e)
+        print("Подписчика нет в подписчиках и он попытался отписаться!")
         return False
 
 
@@ -100,7 +104,7 @@ def get_weather(city = 'Moscow', API_KEY = API_KEY):
         length_of_the_day = datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.fromtimestamp(data["sys"]["sunrise"])
         day_lenght = time.fromisoformat(str(length_of_the_day)).strftime('%H часов %M минут(у)')
 
-        return (f"В городе сейчас {weather_description}\n"
+        return (f"В городе {city} сейчас {weather_description}\n"
                 f"Температура {temp}C°. Ожидаемый минимум и максимум на сегодня: {temp_min}C°/{temp_max}C°\n"
                 f"Ощущается как {feels_like}C°\n"
                 f"Влажность {humidity}%. Давление {pressure} мм.рт.ст. Скорость ветра {wind_speed}м/с\n"
@@ -110,6 +114,24 @@ def get_weather(city = 'Moscow', API_KEY = API_KEY):
     except Exception as e:
         print(e)
         return ("Ошибка в названии города! ")
+    
+def send_weather(bot=BOT):
+    try:
+        if len(get_users()) > 0:
+            print("Был запрошен список чатов для рассылки")
+            users = get_users()
+
+        else:
+            print('Нет подписчиков! Прекращаю работу скрипта')
+
+    except FileNotFoundError as e:
+        print("Нет файла, нет подписчиков!")
+
+    message = get_weather('novosibirsk')
+
+    for i in range(len(users)):
+        bot.send_message(users[i], message)
+        sleep(2)
 
 
 
