@@ -2,11 +2,13 @@ import bot
 import functions
 from time import sleep
 
+SUBSCRIBERS = bot.SUBSCRIBERS
+
 def main():
     try:
-        if len(functions.get_users()) > 0:
+        if len(functions.get_users(SUBSCRIBERS)) > 0:
             print("Был запрошен список чатов для рассылки")
-            users = functions.get_users()
+            users = functions.get_users(SUBSCRIBERS)
         else:
             print('Нет подписчиков! Прекращаю работу скрипта')
             exit()
@@ -16,7 +18,7 @@ def main():
 
     tg_bot = bot.bot
     message = functions.get_weather('novosibirsk')
-    
+
     for i in range(len(users)):
         tg_bot.send_message(users[i], message)
         sleep(2)
