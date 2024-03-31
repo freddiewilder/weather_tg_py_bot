@@ -56,9 +56,23 @@ def del_id(target_id = None, dump_path = SUBSCRIBERS):
     users = get_users()
     try:
         users.pop(users.index(str(target_id)))
-        with open(SUBSCRIBERS, "w") as file:
-            file.writelines(users + "\n")
-        return True
+        if len(users) == 0:
+            print("Flag 1")
+            with open(SUBSCRIBERS, "w") as file:
+                file.write("")
+            return True
+        else:
+            print('Flag 2')
+            if len(users) > 0:
+                print ("Flag 2.1")
+                with open(SUBSCRIBERS, "w") as file:
+                    for i in range(len(users)):
+                        file.write(users[i] + "\n")
+            else:
+                print ("Flag 2.2")
+                with open(SUBSCRIBERS, 'w') as file:
+                    file.write("")
+            return True
     except ValueError as e:
         print (e)
         print("Del_id error")
