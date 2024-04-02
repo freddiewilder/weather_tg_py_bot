@@ -11,12 +11,11 @@ def send_weather(dump_path=SUBSCRIBERS):
         weather = lib.get_weather("Новосибирск")
 
         for n in users:
-            print(n, weather)
+            #print(n, weather)
             bot.send_message(chat_id = n, text = weather)
-            lib.sleep(5)
+            #lib.sleep(5)
     except Exception as e:
         print(e)
-    return 0
 
 @bot.message_handler(commands=['start', 'help', 'sub', 'unsub'])
 def send_welcome(message):
@@ -50,8 +49,8 @@ def unsub(message):
         bot.reply_to(message, "Сперва подпишись чтобы отписываться!")
 
 def main():
+    print("Запускаю бота..")
     bot.infinity_polling()
-    
 
 if __name__ == '__main__':
     main()

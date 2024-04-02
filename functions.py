@@ -131,7 +131,7 @@ def send_weather(bot=BOT):
 
     for i in range(len(users)):
         bot.send_message(users[i], message)
-        sleep(2)
+        sleep(1)
 
 
 
