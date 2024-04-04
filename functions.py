@@ -115,11 +115,11 @@ def get_weather(city = 'Moscow', API_KEY = API_KEY):
         print(e)
         return ("Ошибка в названии города! ")
     
-def send_weather(bot=BOT):
+def send_weather(users_file = SUBSCRIBERS):
     try:
         if len(get_users()) > 0:
             print("Был запрошен список чатов для рассылки")
-            users = get_users()
+            users = get_users(users_file)
 
         else:
             print('Нет подписчиков! Прекращаю работу скрипта')
@@ -127,10 +127,10 @@ def send_weather(bot=BOT):
     except FileNotFoundError as e:
         print("Нет файла, нет подписчиков!")
 
-    message = get_weather('novosibirsk')
+    message = get_weather('Новосибирск')
 
     for i in range(len(users)):
-        bot.send_message(users[i], message)
+        BOT.send_message(users[i], message)
         sleep(1)
 
 
