@@ -1,5 +1,4 @@
 import functions as lib
-import schedule
 import os
 
 db_file = os.path.abspath('subscribers.txt')

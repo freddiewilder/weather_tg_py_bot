@@ -4,11 +4,13 @@ from os import getenv
 from datetime import time, datetime
 from time import sleep
 import telebot
+import gismeteo as gis
 
 load_dotenv()
 API_KEY = getenv('API_KEY')
 BOT_TOKEN = getenv('TG_API_KEY')
 SUBSCRIBERS = 'subscribers.txt'
+GISMETEO_API = getenv('GISMETEO_API')
 BOT = telebot.TeleBot(BOT_TOKEN)
 
 def get_users(dump_path=SUBSCRIBERS):
@@ -83,7 +85,7 @@ def del_id(target_id = None, dump_path = SUBSCRIBERS):
         return False
 
 
-def get_weather(city = 'Moscow', API_KEY = API_KEY):
+def get_openweather(city = 'Moscow', API_KEY = API_KEY):
 
     try:
         r = requests.get(
@@ -127,7 +129,7 @@ def send_weather(users_file = SUBSCRIBERS):
     except FileNotFoundError as e:
         print("Нет файла, нет подписчиков!")
 
-    message = get_weather('Новосибирск')
+    message = gis.get_weather('Новосибирск', GISMETEO_API)
 
     for i in range(len(users)):
         BOT.send_message(users[i], message)

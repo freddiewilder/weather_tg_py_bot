@@ -4,19 +4,6 @@ API_KEY = lib.API_KEY
 bot = lib.BOT
 SUBSCRIBERS = 'subscribers.txt'
 
-def send_weather(dump_path=SUBSCRIBERS):
-
-    try:
-        users = lib.get_users()
-        weather = lib.get_weather("Новосибирск")
-
-        for n in users:
-            #print(n, weather)
-            bot.send_message(chat_id = n, text = weather)
-            #lib.sleep(5)
-    except Exception as e:
-        print(e)
-
 @bot.message_handler(commands=['start', 'help', 'sub', 'unsub'])
 def send_welcome(message):
     match message.text:
@@ -31,7 +18,7 @@ def send_welcome(message):
 @bot.message_handler(content_types=["text"])
 def weather(message):
     try:
-        bot.send_message(message.chat.id, lib.get_weather(message.text))
+        bot.send_message(message.chat.id, lib.gis.get_weather(message.text, lib.GISMETEO_API))
     except Exception as e:
         print(e)
         bot.reply_to(message, "Нет такого города :с")
