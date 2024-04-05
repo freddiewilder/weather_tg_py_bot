@@ -44,14 +44,17 @@ def get_weather(city: str, API_TOKEN :str) -> str:
     sunrise = datetime.strptime(res['data']['astro']['sun']['sunrise'][:-6], '%Y-%m-%dT%H:%M:%S')
     sunset = datetime.strptime(res['data']['astro']['sun']['sunset'][:-6], '%Y-%m-%dT%H:%M:%S')
     next_full_moon = datetime.strptime(res['data']['astro']['moon']['next_full'][:-6], '%Y-%m-%dT%H:%M:%S')
+    sunrise = sunrise.strftime("%H:%M")
+    sunset = sunset.strftime("%H:%M")
+    next_full_moon = next_full_moon.strftime("%d.%m")
 
     return (
         f"Погода {nameP}\n"
         f"{description}. Температура воздуха: {air_temp}°C. По ощущениям: {comfort_temp}°C\n"
         f"Влажность: {humidity}%. Давление: {pressure} мм.рт.ст\n"
         f"Скорость ветра: {wind_speed} м/с. Количество осадков: {precipitation_amount} мм\n"
-        f"Восход: {sunrise.strftime("%H:%M")}\n"
-        f"Закат: {sunset.strftime("%H:%M")}\n"
-        f"Ближайшее полнолуние: {next_full_moon.strftime("%d.%m")}\n"
+        f"Восход: {sunrise}\n"
+        f"Закат: {sunset}\n"
+        f"Ближайшее полнолуние: {next_full_moon}\n"
         f"Поставщик метеоданных : GISMETEO"
     )  
