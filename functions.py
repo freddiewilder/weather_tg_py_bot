@@ -1,10 +1,11 @@
 import requests
 from dotenv import load_dotenv
-from os import getenv
+from os import getenv, path
 from datetime import time, datetime
 from time import sleep
 import telebot
 import gismeteo as gis
+from random import randint
 
 load_dotenv()
 API_KEY = getenv('API_KEY')
@@ -117,6 +118,12 @@ def get_openweather(city = 'Moscow', API_KEY = API_KEY):
         print(e)
         return ("Ошибка в названии города! ")
     
+def mass_message(message :str, users) :
+    for i in range(len(users)):
+        BOT.send_message(users[i], message)
+        sleep(0.5)
+
+    
 def send_weather(users_file = SUBSCRIBERS):
     try:
         if len(get_users()) > 0:
@@ -130,17 +137,43 @@ def send_weather(users_file = SUBSCRIBERS):
         print("Нет файла, нет подписчиков!")
 
     message = gis.get_weather('Новосибирск', GISMETEO_API)
+    mass_message(message, users)
 
-    for i in range(len(users)):
-        BOT.send_message(users[i], message)
-        sleep(1)
+def send_jokes(jokes_file ,users_file = SUBSCRIBERS) :
 
+    with open (jokes_file, "r", encoding='utf') as file :
+        text = file.readlines()
 
+    cur = randint(0, len(text))
+
+    try:
+        if len(get_users()) > 0:
+            print("Был запрошен список чатов для рассылки")
+            users = get_users(users_file)
+
+        else:
+            print('Нет подписчиков! Прекращаю работу скрипта')
+
+    except FileNotFoundError as e:
+        print("Нет файла, нет подписчиков!")
+
+    mass_message(text[cur], users)
+
+def get_joke() -> str :
+
+    jokes_file = path.abspath('jokes.txt')
+
+    with open (jokes_file, "r", encoding='utf') as file :
+        text = file.readlines()
+
+    cur = randint(0, len(text))
+
+    return text[cur]
 
     
 
 def main():
-   return 0
+   pass
 
 if __name__ == '__main__':
     main()

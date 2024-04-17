@@ -1,3 +1,4 @@
 venv/
 .env
 subscribers.txt
+__pycache__

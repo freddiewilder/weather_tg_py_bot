@@ -4,13 +4,15 @@ API_KEY = lib.API_KEY
 bot = lib.BOT
 SUBSCRIBERS = 'subscribers.txt'
 
-@bot.message_handler(commands=['start', 'help', 'sub', 'unsub'])
+@bot.message_handler(commands=['start', 'help', 'sub', 'unsub', 'joke'])
 def send_welcome(message):
     match message.text:
         case '/sub':
             subscribe(message)
         case '/unsub':
             unsub(message)
+        case '/joke' : 
+            bot.reply_to(message, lib.get_joke())
         case _:
             bot.reply_to(message, "Привет! Напиши /sub чтобы получать прогноз погоды Новосибирска ежедневно утром и вечером!\n"
                             f"Так же ты можешь написать название любого города чтобы получить прогноз погоды на данный момент!")
