@@ -6,6 +6,7 @@ from time import sleep
 import telebot
 import gismeteo as gis
 from random import randint
+import re
 
 load_dotenv()
 API_KEY = getenv('API_KEY')
@@ -167,13 +168,20 @@ def get_joke() -> str :
         text = file.readlines()
 
     cur = randint(0, len(text))
+    rep_chars = {
+       "-" : "\n-",
+       "." : ".\n",
+       "!" : "!\n",
+       "?" : "?\n"
+   }
+    table = str.maketrans(rep_chars)
+    result = text[cur].translate(table)
 
-    return text[cur]
+    return result
 
     
 
 def main():
    pass
-
 if __name__ == '__main__':
     main()
